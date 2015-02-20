@@ -6,7 +6,7 @@
 /*   By: tbalea <tbalea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/13 11:18:05 by tbalea            #+#    #+#             */
-/*   Updated: 2015/02/20 20:02:35 by tbalea           ###   ########.fr       */
+/*   Updated: 2015/02/20 20:09:19 by tbalea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,7 +346,7 @@ void Water::Speed( void ) {
 					SpeedNew(x, y, x-1, y, slow, drop/2);
 
 					for ( unsigned int n = 2;
-							(x - n) >= 0 &&
+							x >= n &&
 							drop - _CurMap[x-n][y].height + _Map[x-n][y] > inertie;
 							n++ ) {
 						drop -= _CurMap[x-n][y].height + _Map[x-n][y];
@@ -359,7 +359,7 @@ void Water::Speed( void ) {
 					SpeedNew(x, y, x, y-1, slow, drop * slow);
 
 					for ( unsigned int n = 2;
-							(y - n) > 0 &&
+							y >= n &&
 							drop - _CurMap[x][y-n].height + _Map[x][y-n] > inertie;
 							n++ ) {
 						drop -= _CurMap[x][y-n].height + _Map[x][y-n];
