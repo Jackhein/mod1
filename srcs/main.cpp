@@ -6,7 +6,7 @@
 /*   By: mmartin <mmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/28 13:45:14 by mmartin           #+#    #+#             */
-/*   Updated: 2015/02/16 14:30:43 by mmartin          ###   ########.fr       */
+/*   Updated: 2015/05/22 10:41:52 by mmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fstream>
-#include "map.h"
+#include "mod1.h"
 #include "Map.class.hpp"
 #include "GraphicalDisplay.class.hpp"
 
@@ -61,26 +61,51 @@ void	ft_parse(char *argv, std::list<t_map> *map)
 	}
 }
 
-int		main(int argc, char **argv)
+void	ft_run(std::list<t_map> &mapHill)
 {
-	std::list<t_map>	mapHill;
-
-	if (argc != 2)
-	{
-		std::cout << "Usage: " << argv[0] << " file" << std::endl;
-		return (1);
-	}
-	ft_parse(argv[1], &mapHill);
-
-	std::list<t_map>::iterator			it;
-	std::list<t_map>::const_iterator	ite = mapHill.end();
-
-	GraphicalDisplay		gd(1000, 1000);
+	GraphicalDisplay	gd(1000, 1000);
+	float				**tab;
+	bool				run = true;
 
 	gd.setMap(mapHill);
 	gd.setWater();
+	tab = gd.getMap()->getMap();
+	gd.setBackground();
+	gd.draw(tab);
+	while (run)
+	{
+		run = gd.run();
+		gd.getWater()->Flow();
+		gd.drawWater(tab);
+	}
+}
 
-	gd.run();
+int		main(int argc, char **argv)
+{
+	std::list<t_map>	mapHill;
+	char				*ext;
 
+	if (argc != 2)
+	{
+		std::cout << "Usage: " << argv[0] << " file.mod1" << std::endl;
+		return (1);
+	}
+	ext = strrchr(argv[1], '.');
+	if (!ext || strcmp(ext, ".mod1"))
+	{
+		std::cout << "Usage: " << argv[0] << " file.mod1" << std::endl;
+		return (1);
+	}
+	ft_parse(argv[1], &mapHill);
+	if (mapHill.empty())
+	{
+		std::cout << "Empty file or open failed" << std::endl;
+		return (1);
+	}
+	try {
+		ft_run(mapHill);
+	} catch (std::exception const & e) {
+		std::cerr << e.what() << std::endl;
+	}
 	return (0);
 }
